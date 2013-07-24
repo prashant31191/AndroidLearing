@@ -56,7 +56,8 @@ public class MainActivity extends Activity {
 		AssetManager asm=getAssets();
 		InputStream is = null;
 		try {
-			is = asm.open("pixar2.jpg");
+			is = asm.open("UI/pixar4.jpg");
+			//is = asm.open("pixar2.jpg");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
