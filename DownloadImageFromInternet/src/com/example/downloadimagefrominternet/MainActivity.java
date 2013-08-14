@@ -18,14 +18,22 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	private ImageView image;
+	private static final int DOWNLOAD = 0;
+	private static final int UPDATE = 1;
+	private static ImageView image;
+	private static TextView text;
+	private static ProgressBar progressbar;
+	static int fileSize;
+	static int downloadSize;
 
 	private final static String ALBUM_PATH = Environment
 			.getExternalStorageDirectory() + "/wy_test/";
-	private Bitmap mBitmap;
+	private static Bitmap mBitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +41,11 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		image = (ImageView) findViewById(R.id.image);
+		text = (TextView)findViewById(R.id.text);
+		progressbar = (ProgressBar)findViewById(R.id.progressbar);
+		fileSize = 0;
+		downloadSize = 0;
+		
 		new Thread(connectNet).start();
 	}
 
@@ -42,32 +55,42 @@ public class MainActivity extends Activity {
 			try {
 				String url = "http://img.my.csdn.net/uploads/201211/21/1353511891_4579.jpg";
 				//方法1
-				mBitmap = BitmapFactory.decodeStream(getImageStream(url));
+				//mBitmap = BitmapFactory.decodeStream(getImageStream(url));
 				//方法2
-				/*byte[] data = getImage(url);  
+				byte[] data = getImage(url);
                 if(data!=null){  
                     mBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);		// bitmap  
                 }else{
                     Log.d("wy", "Image error!");
-                } */
+                }
 
 				// 发送消息，通知handler在主线程中更新UI
-				connectHanlder.sendEmptyMessage(0);
+                Message m = new Message();
+        		m.what = UPDATE;
+        		connectHanlder.sendMessage(m);
 				saveFile(mBitmap, "test.jpg");
-				Log.d("wy", "set image ...");
 			} catch (Exception e) {
 				e.printStackTrace();
-				Log.d("wy",e.toString());
 			}
 		}
 	};
 
-	private Handler connectHanlder = new Handler() {
+	private static Handler connectHanlder = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
-			// 更新UI，显示图片
-			if (mBitmap != null) {
-				image.setImageBitmap(mBitmap);
+			switch(msg.what)
+			{
+			case UPDATE:
+				// 更新UI，显示图片
+				if (mBitmap != null) {
+					image.setImageBitmap(mBitmap);
+				}
+				break;
+			case DOWNLOAD:
+				int progress = downloadSize*100/fileSize;
+				text.setText("fileSize="+fileSize);
+				progressbar.setProgress(progress);
+				break;
 			}
 		}
 	};
@@ -91,6 +114,8 @@ public class MainActivity extends Activity {
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setConnectTimeout(5 * 1000);		//设置连接的时限为5秒
 		conn.setRequestMethod("GET");
+		fileSize = conn.getContentLength();
+		
 		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			return conn.getInputStream();
 		}
@@ -101,11 +126,12 @@ public class MainActivity extends Activity {
         URL url = new URL(path);  
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();  
         conn.setConnectTimeout(5 * 1000);  
-        conn.setRequestMethod("GET");  
+        conn.setRequestMethod("GET");
+		fileSize = conn.getContentLength();
         
         InputStream inStream = conn.getInputStream();
         
-        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){  
+        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
             return readStream(inStream);
         }  
         return null;  
@@ -116,7 +142,13 @@ public class MainActivity extends Activity {
         byte[] buffer = new byte[1024];  
         int len = 0;  
         while( (len=inStream.read(buffer)) != -1){  
-            outStream.write(buffer, 0, len);  
+            outStream.write(buffer, 0, len);
+            downloadSize+=len;
+    		
+            Message m = new Message();
+    		m.what = DOWNLOAD;
+    		connectHanlder.sendMessage(m);
+    		
         }  
         outStream.close();  
         inStream.close();  
