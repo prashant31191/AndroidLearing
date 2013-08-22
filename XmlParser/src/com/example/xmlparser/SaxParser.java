@@ -7,15 +7,15 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class SAXPraser extends DefaultHandler {
+public class SaxParser extends DefaultHandler {
 
     final int ITEM = 0x0005;
 
-    List<channel> list;
-    channel chann;
+    List<Channel> list;
+    Channel chann;
     int currentState = 0;
 
-    public List<channel> getList() {
+    public List<Channel> getList() {
         return list;
     }
 
@@ -36,7 +36,7 @@ public class SAXPraser extends DefaultHandler {
     //文档开始通知
     @Override
     public void startDocument() throws SAXException {
-        list = new ArrayList<channel>();
+        list = new ArrayList<Channel>();
     }
     
     //接收文档结束通知
@@ -49,7 +49,7 @@ public class SAXPraser extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
-        chann = new channel();
+        chann = new Channel();
         if (localName.equals("item")) {
             for (int i = 0; i < attributes.getLength(); i++) {
             	//获取XML中的所有属性，其中0是序号，代表第一个属性

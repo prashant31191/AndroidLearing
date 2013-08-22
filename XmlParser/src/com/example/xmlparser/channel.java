@@ -1,6 +1,6 @@
 package com.example.xmlparser;
 
-public class channel {
+public class Channel {
 	
 	private String id;
 	private String url;

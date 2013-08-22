@@ -1,28 +1,54 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-	android:orientation="vertical">
-	
-    <Button 
-        android:id="@+id/sax"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="SAX"/>
-    <Button 
-        android:id="@+id/pull"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Pull"/>
-    <Button 
-        android:id="@+id/dom"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Dom"/>
-    <TextView
-        android:id="@+id/text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical" >
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/sax"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="sax" />
+
+        <Button
+            android:id="@+id/pull"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="pull" />
+
+        <Button
+            android:id="@+id/dom"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="dom" />
+
+        <Button
+            android:id="@+id/sax_internet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="sax from internet" />
+
+        <Button
+            android:id="@+id/pull_internet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="pull from internet" />
+
+        <Button
+            android:id="@+id/dom_internet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="dom from internet" />
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_world" />
+    </LinearLayout>
+
+</ScrollView>
