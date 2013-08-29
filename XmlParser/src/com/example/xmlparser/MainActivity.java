@@ -29,6 +29,7 @@ import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -144,7 +145,7 @@ public class MainActivity extends Activity {
 									+ xrp.getAttributeValue(null, "id"); // 获取标签为id的值
 							textfromxml += "\nurl="
 									+ xrp.getAttributeValue(null, "url"); // 获取标签为url的值
-							textfromxml += "\nname=" + xrp.nextText(); // 获取item的值
+							textfromxml += "\nname=" + getNextText(xrp); // 获取item的值
 						}
 					}
 					xrp.next();
@@ -311,19 +312,19 @@ public class MainActivity extends Activity {
 								if (parser.getEventType() == XmlResourceParser.START_TAG) {
 									String tagName = parser.getName();
 									if (tagName.equals("id")) {
-										textfromxml += "\nid=" + parser.nextText();
+										textfromxml += "\nid=" + getNextText(parser);
 									}
 									if (tagName.equals("title")) {
-										textfromxml += "\ntitle=" + parser.nextText();
+										textfromxml += "\ntitle=" + getNextText(parser);
 									}
 									if (tagName.equals("artist")) {
-										textfromxml += "\nartist=" + parser.nextText();
+										textfromxml += "\nartist=" + getNextText(parser);
 									}
 									if (tagName.equals("duration")) {
-										textfromxml += "\nduration=" + parser.nextText();
+										textfromxml += "\nduration=" + getNextText(parser);
 									}
 									if (tagName.equals("thumb_url")) {
-										textfromxml += "\nthumb_url=" + parser.nextText();
+										textfromxml += "\nthumb_url=" + getNextText(parser);
 									}
 								}
 								parser.next();
@@ -428,4 +429,12 @@ public class MainActivity extends Activity {
 
 		}
 	};
+
+	private String getNextText(XmlPullParser parser) throws XmlPullParserException, IOException{
+	    String result = parser.nextText();
+	    if (parser.getEventType() != XmlPullParser.END_TAG) {
+	        parser.nextTag();
+	    }
+	    return result;
+	}
 }
