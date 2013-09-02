@@ -12,8 +12,7 @@
         android:layout_height="50dip"
         android:layout_alignParentLeft="true"
         android:layout_marginRight="5dip"
-        android:padding="3dip"
-        android:src="@drawable/ic_launcher" />
+        android:padding="3dip" />
 
     <!-- 歌曲名 -->
     <TextView
