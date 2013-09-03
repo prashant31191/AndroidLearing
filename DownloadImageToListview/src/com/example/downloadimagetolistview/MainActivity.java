@@ -25,7 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.util.Xml;
 import android.widget.ListView;
 
@@ -85,6 +84,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void run() {
 				try {
+					//通过pull解析xml文件，解析完后先更新获取到的文本信息，再开线程池去下载图片
 					XmlPullParser xrp = Xml.newPullParser();
 					Song song = null;
 					inStream = null;
@@ -126,6 +126,7 @@ public class MainActivity extends Activity {
 								if (tagName.equals("thumb_url")) {
 									String text = Util.getNextText(xrp);
 									song.setThumb_url(text);
+									
 									songlist.add(song);
 									sendupdate(count++);
 								}
@@ -164,6 +165,7 @@ public class MainActivity extends Activity {
 		for (int i = 0; i < songlist.size(); i++) {
 			final int pos = i;
 			final String path = songlist.get(pos).getThumb_url();
+			//开启线程池下载图片，从而实现异步下载图片
 			executorService.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -207,11 +209,10 @@ public class MainActivity extends Activity {
 		public void handleMessage(Message msg) {
 			int pos = msg.getData().getInt("pos");
 			switch (msg.what) {
-			case UPDATE_TEXT:
+			case UPDATE_TEXT:		//更新listview中的文本
 				updateListview(pos);
 				break;
-			case UPDATE_IMAGE:
-				Log.d("wy","message: pos = "+pos+", msg.what = "+msg.what);
+			case UPDATE_IMAGE:		//更新listview中的图片
 				Bitmap mBitmap = msg.getData().getParcelable("bitmap");
 				updateListviewImage(pos,mBitmap);
 				break;
