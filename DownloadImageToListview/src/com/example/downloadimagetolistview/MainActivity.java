@@ -18,7 +18,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -38,7 +37,7 @@ public class MainActivity extends Activity {
 	private static final int UPDATE_TEXT = 1;
 	private static final int UPDATE_IMAGE = 2;
 	private static Context mContext;
-	private static Bitmap bitmap;
+//	private ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +54,9 @@ public class MainActivity extends Activity {
 
 		songlist = new ArrayList<Song>();
 
+		//创建图片缓存的文件夹
+		Util.makedir();
+		
 		downloadSongInfo();
 	}
 
@@ -64,7 +66,8 @@ public class MainActivity extends Activity {
 		Map<String, Object> map = null;
 		for (int i = 0; i < 30; i++) {
 			map = new HashMap<String, Object>();
-			Drawable drawable = getResources().getDrawable(R.drawable.ic_launcher);
+			Drawable drawable = getResources().getDrawable(
+					R.drawable.ic_launcher);
 			map.put("list_image", drawable);
 			map.put("title", "Rihanna Love the way lie");
 			map.put("artist", "Just gona stand there and ...");
@@ -90,7 +93,6 @@ public class MainActivity extends Activity {
 					URLConnection connection = url.openConnection();
 					HttpURLConnection httpConnection = (HttpURLConnection) connection;
 					int responseCode = httpConnection.getResponseCode();
-					Log.d("wy", "responseCode=" + responseCode);
 					if (responseCode == HttpURLConnection.HTTP_OK) {
 						inStream = httpConnection.getInputStream();
 
@@ -104,23 +106,23 @@ public class MainActivity extends Activity {
 									song = new Song();
 								}
 								if (tagName.equals("id")) {
-									String text = getNextText(xrp);
+									String text = Util.getNextText(xrp);
 									song.setId(text);
 								}
 								if (tagName.equals("title")) {
-									String text = getNextText(xrp);
+									String text = Util.getNextText(xrp);
 									song.setTitle(text);
 								}
 								if (tagName.equals("artist")) {
-									String text = getNextText(xrp);
+									String text = Util.getNextText(xrp);
 									song.setArtist(text);
 								}
 								if (tagName.equals("duration")) {
-									String text = getNextText(xrp);
+									String text = Util.getNextText(xrp);
 									song.setDuration(text);
 								}
 								if (tagName.equals("thumb_url")) {
-									String text = getNextText(xrp);
+									String text = Util.getNextText(xrp);
 									song.setThumb_url(text);
 									songlist.add(song);
 									sendupdate(count++);
@@ -128,42 +130,26 @@ public class MainActivity extends Activity {
 							}
 							xrp.next();
 						}
+						//downloadimage();
 						new Thread(connectNet).start();
 
 					}
 
 				} catch (MalformedURLException e) {
-					Log.d("wy", "e=" + e.toString());
 					e.printStackTrace();
 				} catch (IOException e) {
-					Log.d("wy", "e=" + e.toString());
 					e.printStackTrace();
 				} catch (XmlPullParserException e) {
-					Log.d("wy", "e=" + e.toString());
 					e.printStackTrace();
 				} catch (Exception e) {
-					Log.d("wy", "e=" + e.toString());
 					e.printStackTrace();
 				}
 			}
 		}).start();
 	}
 
-	public InputStream getImageStream(String path) throws Exception {
-		URL url = new URL(path);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		conn.setConnectTimeout(5 * 1000); // 设置连接的时限为5秒
-		conn.setRequestMethod("GET");
-
-		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			return conn.getInputStream();
-		}
-		return null;
-	}
-
 	private void sendupdate(int pos) {
-
-		// 发送消息，通知handler在主线程中更新UI
+		// 发送消息，通知handler在主线程中更新listview中的文字
 		Message m = new Message();
 		m.what = UPDATE_TEXT;
 		Bundle bundle = new Bundle();
@@ -172,25 +158,37 @@ public class MainActivity extends Activity {
 		connectHanlder.sendMessage(m);
 	}
 
+	/*private void downloadimage()
+	{
+		for (int pos = 0; pos < songlist.size(); pos++) {
+			executorService.submit(new Runnable() {
+				@Override
+				public void run() {
+					String path = songlist.get(pos).getThumb_url();
+					bitmap = getimagefromurl(path);
+					
+				}
+			});
+		}
+	}*/
+	
 	private Runnable connectNet = new Runnable() {
 		@Override
 		public void run() {
-			try {
-				for (int pos = 0; pos < songlist.size(); pos++) {
+			for (int pos = 0; pos < songlist.size(); pos++) {
 
-					String url = songlist.get(pos).getThumb_url();
-					bitmap = BitmapFactory.decodeStream(getImageStream(url));
+				String path = songlist.get(pos).getThumb_url();
+				Log.d("wy", "--------------------------"+pos+"--------------------------");
+				Bitmap mBitmap = Util.getimagefromurl(path);
 
-					// 发送消息，通知handler在主线程中更新UI
-					Message m = new Message();
-					m.what = UPDATE_IMAGE;
-					Bundle bundle = new Bundle();
-					bundle.putInt("pos", pos);
-					m.setData(bundle);
-					connectHanlder.sendMessage(m);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+				// 发送消息，通知handler在主线程中更新UI
+				Message m = new Message();
+				m.what = UPDATE_IMAGE;
+				Bundle bundle = new Bundle();
+				bundle.putInt("pos", pos);
+				bundle.putParcelable("bitmap", mBitmap);
+				m.setData(bundle);
+				connectHanlder.sendMessage(m);
 			}
 		}
 	};
@@ -204,35 +202,25 @@ public class MainActivity extends Activity {
 				updateListview(pos);
 				break;
 			case UPDATE_IMAGE:
-				updatelistviewimage(pos);
+				Log.d("wy","message: pos = "+pos+", msg.what = "+msg.what);
+				Bitmap mBitmap = msg.getData().getParcelable("bitmap");
+				updateListviewImage(pos,mBitmap);
 				break;
 			}
 		}
 	};
 
 	@SuppressWarnings("unchecked")
-	private static void updatelistviewimage(int pos) {
-
-		Log.d("wy","updatelistviewimage "+pos);
+	private static void updateListviewImage(int pos,Bitmap mBitmap) {		//从xml里解析出图片地址后更新listview中的图片
 		Map<String, Object> map = (HashMap<String, Object>) adapter
 				.getItem(pos);
-		Drawable drawable = new BitmapDrawable(mContext.getResources(), bitmap);
-		//map.remove("list_image");
+		Drawable drawable = new BitmapDrawable(mContext.getResources(), mBitmap);
 		map.put("list_image", drawable);
 		adapter.notifyDataSetChanged();
 	}
 
-	private String getNextText(XmlPullParser parser)
-			throws XmlPullParserException, IOException {
-		String result = parser.nextText();
-		if (parser.getEventType() != XmlPullParser.END_TAG) {
-			parser.nextTag();
-		}
-		return result;
-	}
-
 	@SuppressWarnings("unchecked")
-	private static void updateListview(int pos) {
+	private static void updateListview(int pos) {			//解析完xml后更新listview里的文本
 		Map<String, Object> map = (HashMap<String, Object>) adapter
 				.getItem(pos);
 		map.put("title", songlist.get(pos).getTitle());
