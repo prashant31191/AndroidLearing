@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -37,7 +39,7 @@ public class MainActivity extends Activity {
 	private static final int UPDATE_TEXT = 1;
 	private static final int UPDATE_IMAGE = 2;
 	private static Context mContext;
-//	private ExecutorService executorService = Executors.newFixedThreadPool(5);
+	private ExecutorService executorService = Executors.newFixedThreadPool(5);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -130,8 +132,8 @@ public class MainActivity extends Activity {
 							}
 							xrp.next();
 						}
-						//downloadimage();
-						new Thread(connectNet).start();
+						asyncDownloadImage();
+						//new Thread(connectNet).start();
 
 					}
 
@@ -158,21 +160,28 @@ public class MainActivity extends Activity {
 		connectHanlder.sendMessage(m);
 	}
 
-	/*private void downloadimage()
-	{
-		for (int pos = 0; pos < songlist.size(); pos++) {
+	private void asyncDownloadImage(){
+		for (int i = 0; i < songlist.size(); i++) {
+			final int pos = i;
+			final String path = songlist.get(pos).getThumb_url();
 			executorService.submit(new Runnable() {
 				@Override
 				public void run() {
-					String path = songlist.get(pos).getThumb_url();
-					bitmap = getimagefromurl(path);
-					
+					Bitmap mBitmap = Util.getimagefromurl(path);
+
+					Message m = new Message();
+					m.what = UPDATE_IMAGE;
+					Bundle bundle = new Bundle();
+					bundle.putInt("pos", pos);
+					bundle.putParcelable("bitmap", mBitmap);
+					m.setData(bundle);
+					connectHanlder.sendMessage(m);
 				}
 			});
 		}
-	}*/
+	}
 	
-	private Runnable connectNet = new Runnable() {
+	/*private Runnable connectNet = new Runnable() {
 		@Override
 		public void run() {
 			for (int pos = 0; pos < songlist.size(); pos++) {
@@ -191,7 +200,7 @@ public class MainActivity extends Activity {
 				connectHanlder.sendMessage(m);
 			}
 		}
-	};
+	};*/
 
 	private static Handler connectHanlder = new Handler() {
 		@Override
