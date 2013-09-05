@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+	    
+	    <Button
+	        android:id="@+id/button_alpha"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="alpha" />
+	    
+	    <Button 
+	        android:id="@+id/button_rotate"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="rotate"/>
+	</LinearLayout>
+
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+	    
+	    <Button 
+	        android:id="@+id/button_scale"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="scale"/>
+	    
+	    <Button 
+	        android:id="@+id/button_translate"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="translate"/>
+	</LinearLayout>
+	
+	<ImageView 
+	    android:id="@+id/ball"
+		android:layout_gravity="center"
+		android:layout_marginTop="100dp"
+	    android:src="@drawable/ball"
+	    android:layout_width="150dp"
+	    android:layout_height="150dp"/>
+	
+	
+</LinearLayout>
