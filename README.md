@@ -24,6 +24,8 @@ MyGestureDetector：手势探测，能检测向左右上下划动和长按.通�
 
 MyTabHost：tabhost的样例
 
+MyViewPager：ViewPager用于显示应用新特性
+
 PullToRefresh：下拉刷新
 
 ReadImage：从sd卡，res文件夹和assets文件夹读取图片
