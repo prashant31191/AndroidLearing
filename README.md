@@ -20,7 +20,7 @@ ListviewWithAdapter：通过adapter更新listview的数据
 
 ListviewWithImage：在listview中展现图片
 
-MyGestureDetector：手势探测，能检测向左右上下划动和长按
+MyGestureDetector：手势探测，能检测向左右上下划动和长按.通过在上方的画布上绘制图形，可识别字母abcdefg及三角形圆形等图形。
 
 MyTabHost：tabhost的样例
 
