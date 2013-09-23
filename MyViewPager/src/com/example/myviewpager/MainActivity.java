@@ -13,6 +13,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class MainActivity extends Activity {
@@ -26,11 +28,15 @@ public class MainActivity extends Activity {
 	private Drawable draw_image1;
 	private Drawable draw_image2;
 	private List<String> titleList;
+	private int lastposition;
+	private Animation myAnimation_Scale;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_firstuse);
+		
+		lastposition = 0;
 		
 		viewpager = (ViewPager) findViewById(R.id.viewpager);
 		image1 = (ImageView)findViewById(R.id.image1);
@@ -38,6 +44,8 @@ public class MainActivity extends Activity {
 		image3 = (ImageView)findViewById(R.id.image3);
 		draw_image1 = getResources().getDrawable(R.drawable.image1);
 		draw_image2 = getResources().getDrawable(R.drawable.image2);
+
+		myAnimation_Scale = AnimationUtils.loadAnimation(this,R.anim.scale);
 
 		pagerTabStrip=(PagerTabStrip) findViewById(R.id.pagerTabStrip);
 		pagerTabStrip.setTabIndicatorColor(getResources().getColor(R.color.violet)); 
@@ -64,8 +72,9 @@ public class MainActivity extends Activity {
 				new Handler().postDelayed(new Runnable(){  
 				    public void run() {  
 						updateMark(arg0);
+						lastposition = arg0;
 				    }  
-				 }, 300);
+				 }, 100);
 			}
 			
 			@Override
@@ -82,18 +91,24 @@ public class MainActivity extends Activity {
 		switch (index) {
 		case 0:
 			image1.setImageDrawable(draw_image2);
+			image1.startAnimation(myAnimation_Scale);
 			image2.setImageDrawable(draw_image1);
-			image3.setImageDrawable(draw_image1);
 			break;
 		case 1:
-			image1.setImageDrawable(draw_image1);
-			image2.setImageDrawable(draw_image2);
-			image3.setImageDrawable(draw_image1);
+			if(lastposition == 0){
+				image1.setImageDrawable(draw_image1);
+				image2.setImageDrawable(draw_image2);
+				image2.startAnimation(myAnimation_Scale);
+			} else{
+				image2.setImageDrawable(draw_image2);
+				image3.setImageDrawable(draw_image1);
+				image2.startAnimation(myAnimation_Scale);
+			}
 			break;
 		case 2:
-			image1.setImageDrawable(draw_image1);
 			image2.setImageDrawable(draw_image1);
 			image3.setImageDrawable(draw_image2);
+			image3.startAnimation(myAnimation_Scale);
 			break;
 		default:
 			break;
