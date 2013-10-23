@@ -28,6 +28,8 @@ MyViewPager：ViewPager用于显示应用新特性
 
 PullToRefresh：下拉刷新
 
+QQFriendGroup：用ExpandableListView模仿qq好友列表
+
 ReadImage：从sd卡，res文件夹和assets文件夹读取图片
 
 SQLite：SQLite数据库的样例
