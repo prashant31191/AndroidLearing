@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/friendbackground">
+    
+    <ImageView 
+        android:id="@+id/image_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_launcher"
+        android:background="#E9F0F7"/>
+
+    <TextView
+        android:id="@+id/text_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:layout_toRightOf="@id/image_avatar"
+        android:layout_marginLeft="10dp"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:text="No Data"/>
+    
+    <TextView
+        android:id="@+id/text_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/image_avatar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:paddingBottom="10dp"
+        android:textColor="#9a9a9a"
+        android:textSize="12sp"
+        android:text="No Data"/>
+    
+    <TextView
+        android:id="@+id/text_signature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/text_status"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"
+        android:singleLine="true"
+        android:textColor="#000000"
+        android:textSize="12sp"
+        android:text="No Data"/>
+    
+    <ImageView 
+        android:id="@+id/image_status"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:visibility="gone"/>
+
+</RelativeLayout>
