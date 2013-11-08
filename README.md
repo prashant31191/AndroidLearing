@@ -12,6 +12,10 @@ DownloadImageFromInternet：从网上下载图片
 
 DownloadImageToListview：从网上下载图片后更新到listview里
 
+DragAndZoomImage：拖动和双指缩放图片
+
+FloatView：悬浮窗口
+
 HttpPost：发送http post请求
 
 ListviewInDialog：dialog中展现listview
