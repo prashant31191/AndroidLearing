@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/button_start"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="开始记录log"/>
+
+    <Button
+        android:id="@+id/button_stop"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:text="停止记录log"/>
+
+</LinearLayout>
