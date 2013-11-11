@@ -26,6 +26,8 @@ ListviewWithImage：在listview中展现图片
 
 MyGestureDetector：手势探测，能检测向左右上下划动和长按.通过在上方的画布上绘制图形，可识别字母abcdefg及三角形圆形等图形。
 
+MyLogcatHelper：保存log到sd卡
+
 MyNotification：在通知栏显示通知
 
 MyTabHost：tabhost的样例
